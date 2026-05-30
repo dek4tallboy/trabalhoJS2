@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="img/planeta-terra.png" type="image/x-icon">
+    <link rel="stylesheet" href="ajax3.css">
+    <title>ajax3 com fetch</title>
+
+</head>
+<body>
+    
+    <h1>🌎 Para Onde Vou?</h1>
+
+    <p>Digite uma cidade para consultar o clima:</p>
+
+    <input type="text" id="cidade" placeholder="Ex: Brasília">
+
+    <button onclick="buscarClima()">
+        Buscar
+    </button>
+
+    <div id="resultado"></div>
+
+    <script>
+
+        function buscarClima() {
+
+            const cidade =
+            document.getElementById("cidade").value;
+
+            const url =
+            "https://wttr.in/" + cidade + "?format=j1&lang=pt";
+
+            fetch(url)
+
+                .then(function(resposta) {
+
+                    return resposta.json();
+                })
+
+                .then(function(dados) {
+
+                    const temperatura =
+                    dados.current_condition[0].temp_C;
+
+                    let descricao =
+                    dados.current_condition[0]
+                    .weatherDesc[0].value.trim();
+
+                    if (descricao == "Clear") {
+                        descricao = "Tempo Limpo"
+                    }
+
+                    else if (descricao == "Cloudy") {
+                        descricao = "Nublado";
+                    }
+
+                    else if (descricao == "Partly Cloudy") {
+                        descricao = "Parcialmente Nublado";
+                    }
+
+                    else if (descricao == "Rain") {
+                        descricao = "Chuva";
+                    }
+
+                    else if (descricao == "Sunny") {
+                        descricao = "Ensolarado";
+                    }
+
+                    else if (descricao == "Overcast") {
+                        descricao = "Nublado";
+                    }
+
+                    else if (descricao == "Patchy rain nearby") {
+                        descricao = "Chuva irregular nas proximidades";
+                    }
+
+                    else if (descricao == "Light rain shower") {
+                        descricao = "Chuva leve";
+                    }
+
+                    document.getElementById("resultado")
+                    .innerHTML = `
+
+                        <h2>${cidade}</h2>
+
+                        <p>
+                            🌡 Temperatura:
+                            ${temperatura}°C
+                        </p>
+
+                        <p>
+                            ☁ Clima:
+                            ${descricao}
+                        </p>
+                    `;
+                })
+
+                .catch(function(erro) {
+
+                    document.getElementById("resultado")
+                    .innerHTML =
+                    "Erro ao buscar dados.";
+
+                    console.log(erro);
+                });
+        }
+
+    </script>
+
+</body>
+</html>
